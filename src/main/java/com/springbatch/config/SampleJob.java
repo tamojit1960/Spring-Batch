@@ -6,6 +6,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -33,7 +34,15 @@ public class SampleJob {
     @Bean
     public Job firstJob() {
         //configure steps in the job very first step define using start next using next()
+//        return jobBuilderFactory.get("First Job")
+//                .start(firstStep())
+//                .next(secondStep())
+//                .build();
+
+        // we can use incrementer provided by spring batch to avoid changing job param every time
+        // we have to still pass job param in arguments
         return jobBuilderFactory.get("First Job")
+                .incrementer(new RunIdIncrementer())
                 .start(firstStep())
                 .next(secondStep())
                 .build();
