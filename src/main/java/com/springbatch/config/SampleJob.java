@@ -1,5 +1,6 @@
 package com.springbatch.config;
 
+import com.springbatch.service.SecondTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -23,6 +24,9 @@ public class SampleJob {
     // To build a step spring batch provides a class
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
+
+    @Autowired
+    private SecondTasklet secondTasklet;
 
     // To have the job spring batch provides one interface that is job
     // so we can define a bean
@@ -53,10 +57,10 @@ public class SampleJob {
 
     private Step secondStep() {
         return stepBuilderFactory.get("Second Step")
-                .tasklet(secondTask()).build();
+                .tasklet(secondTasklet).build();
     }
 
-    private Tasklet secondTask() {
+    /*private Tasklet secondTask() {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
@@ -64,5 +68,5 @@ public class SampleJob {
                 return RepeatStatus.FINISHED;
             }
         };
-    }
+    }*/
 }
