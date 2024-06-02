@@ -1,5 +1,6 @@
 package com.springbatch.config;
 
+import com.springbatch.listener.FirstJobListener;
 import com.springbatch.service.SecondTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -29,6 +30,9 @@ public class SampleJob {
     @Autowired
     private SecondTasklet secondTasklet;
 
+    @Autowired
+    private FirstJobListener firstJobListener;
+
     // To have the job spring batch provides one interface that is job
     // so we can define a bean
     @Bean
@@ -45,6 +49,7 @@ public class SampleJob {
                 .incrementer(new RunIdIncrementer())
                 .start(firstStep())
                 .next(secondStep())
+                .listener(firstJobListener)
                 .build();
     }
 
