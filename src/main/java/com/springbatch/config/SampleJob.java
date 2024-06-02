@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-// Single step
 @Configuration
 public class SampleJob {
 
@@ -29,8 +28,11 @@ public class SampleJob {
     // so we can define a bean
     @Bean
     public Job firstJob() {
+        //configure steps in the job very first step define using start next using next()
         return jobBuilderFactory.get("First Job")
-                .start(firstStep()).build();
+                .start(firstStep())
+                .next(secondStep())
+                .build();
     }
 
     // To have step spring batch provides an interface
@@ -44,6 +46,21 @@ public class SampleJob {
             @Override
             public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
                 System.out.println("This is first tasklet step");
+                return RepeatStatus.FINISHED;
+            }
+        };
+    }
+
+    private Step secondStep() {
+        return stepBuilderFactory.get("Second Step")
+                .tasklet(secondTask()).build();
+    }
+
+    private Tasklet secondTask() {
+        return new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
+                System.out.println("This is second tasklet step");
                 return RepeatStatus.FINISHED;
             }
         };
